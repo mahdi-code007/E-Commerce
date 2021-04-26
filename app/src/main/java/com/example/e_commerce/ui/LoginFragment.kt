@@ -54,22 +54,29 @@ class LoginFragment : Fragment() {
             when (response) {
                 is Resource.Success -> {
                     try {
+
                         Log.e("hello", response.massage.toString())
-                        Log.e("hello Success", "Success${response.data?.loginData?.token}")
+                        Log.e("hello Success", "Success${response.data?.data?.token}")
                         Log.e("hello", "Success${response.data!!.message.toString()}")
                         Log.e("hello", response.data!!.status.toString())
 
-                        response.data.loginData.token?.let { setUserToken(it) }
+                        response.data.data.token.let { setUserToken(it) }
 
                         Toast.makeText(
                                 requireActivity(),
                                 getStringValue(TOKEN),
                                 Toast.LENGTH_LONG
                         ).show()
+                        navController.navigate(R.id.action_loginFragment_to_homeFragment)
+//                        navController.navigate(R.id.action_loginFragment_to_profileFragment)
 
-                    navController.navigate(R.id.action_loginFragment_to_profileFragment)
                     }catch (e : Exception){
                         Log.e("Exception", e.message.toString())
+                        Toast.makeText(
+                                requireActivity(),
+                                "Exception ${e.message.toString()}",
+                                Toast.LENGTH_LONG
+                        ).show()
                     }
 
                 }
@@ -99,12 +106,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnOrRegister.setOnClickListener() {
-//            navController.navigate(R.id.action_loginFragment_to_registerFragment)
-            Toast.makeText(
-                    requireActivity(),
-                    getStringValue(TOKEN),
-                    Toast.LENGTH_LONG
-            ).show()
+            navController.navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
 

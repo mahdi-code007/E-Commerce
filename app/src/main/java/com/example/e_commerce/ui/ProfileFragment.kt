@@ -29,10 +29,8 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(inflater)
-
 //        sharedPreference.getString("token","null")
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
-        getStringValue(TOKEN)?.let { viewModel.getProfileData(it) }
         return binding.root
     }
 
@@ -42,6 +40,8 @@ class ProfileFragment : Fragment() {
         navController = Navigation.findNavController(view)
         sharedPreferences = requireContext().getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
+
+        getStringValue(TOKEN)?.let { viewModel.getProfileData(it) }
 
         viewModel.prfile_MLD.observe(viewLifecycleOwner, Observer { response ->
             when (response) {

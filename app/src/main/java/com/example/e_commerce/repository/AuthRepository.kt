@@ -15,4 +15,7 @@ class AuthRepository {
     suspend fun getProfileData(token : String) =
             RetrofitInstance.api.getProfileData(token)
 
+    suspend fun getHomeData(token: String?) =
+            RetrofitInstance.api.getHomeData(token)
+
 }
