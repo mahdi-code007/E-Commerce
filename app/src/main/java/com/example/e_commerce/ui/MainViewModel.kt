@@ -15,6 +15,7 @@ import com.example.e_commerce.models.categories.CategoriesResponse
 import com.example.e_commerce.models.home.homeData.HomeDataResponse
 import com.example.e_commerce.repository.MainRepository
 import com.example.e_commerce.util.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -22,7 +23,7 @@ class MainViewModel(
 
 ) : ViewModel() {
 
-    val authRepository = MainRepository()
+    val mainRepository = MainRepository()
 
     val login_MLD: MutableLiveData<Resource<LoginResponse>> = MutableLiveData()
     val register_MLD: MutableLiveData<Resource<RegisterResponse>> = MutableLiveData()
@@ -33,13 +34,13 @@ class MainViewModel(
     val categoryDetails_MLD: MutableLiveData<Resource<CategoriesDetails>> = MutableLiveData()
 
 
-    fun login(loginRequest: LoginRequest) = viewModelScope.launch {
+    fun login(loginRequest: LoginRequest) = viewModelScope.launch(Dispatchers.IO) {
         login_MLD.postValue(Resource.Loading())
-        val response = authRepository.login(loginRequest)
-        login_MLD.postValue(handelLoginState(response))
+        val response = mainRepository.login(loginRequest)
+        login_MLD.postValue(handleLoginState(response))
     }
 
-    private fun handelLoginState(response: Response<LoginResponse>): Resource<LoginResponse> {
+    private fun handleLoginState(response: Response<LoginResponse>): Resource<LoginResponse> {
         if (response.isSuccessful) {
             response.body().let { resultResponse ->
                 return Resource.Success(resultResponse)
@@ -48,13 +49,13 @@ class MainViewModel(
         return Resource.Error(response.message())
     }
 
-    fun register(registerRequest: RegisterRequest) = viewModelScope.launch {
+    fun register(registerRequest: RegisterRequest) = viewModelScope.launch(Dispatchers.IO) {
         register_MLD.postValue(Resource.Loading())
-        val response = authRepository.register(registerRequest)
-        register_MLD.postValue(handelRegisterState(response))
+        val response = mainRepository.register(registerRequest)
+        register_MLD.postValue(handleRegisterState(response))
     }
 
-    private fun handelRegisterState(response: Response<RegisterResponse>): Resource<RegisterResponse> {
+    private fun handleRegisterState(response: Response<RegisterResponse>): Resource<RegisterResponse> {
         if (response.isSuccessful) {
             response.body().let { resultResponse ->
                 return Resource.Success(resultResponse)
@@ -63,19 +64,19 @@ class MainViewModel(
         return Resource.Error(response.message())
     }
 
-    fun getProfileData(token: String) = viewModelScope.launch {
+    fun getProfileData(token: String) = viewModelScope.launch(Dispatchers.IO) {
         prfile_MLD.postValue(Resource.Loading())
-        val response = authRepository.getProfileData(token)
-        prfile_MLD.postValue(handelGetProfileData(response))
+        val response = mainRepository.getProfileData(token)
+        prfile_MLD.postValue(handleGetProfileData(response))
     }
 
     fun getBanners() = viewModelScope.launch {
         banners_MLD.postValue(Resource.Loading())
-        val response = authRepository.getBanners()
-        banners_MLD.postValue(handelBanners(response))
+        val response = mainRepository.getBanners()
+        banners_MLD.postValue(handleBanners(response))
     }
 
-    private fun handelBanners(response: Response<BannersResponse>): Resource<BannersResponse> {
+    private fun handleBanners(response: Response<BannersResponse>): Resource<BannersResponse> {
         if (response.isSuccessful) {
             response.body().let { resultResponse ->
 //                Log.i("handelBanners", resultResponse.toString())
@@ -86,25 +87,25 @@ class MainViewModel(
     }
 
 
-    fun getCategories() = viewModelScope.launch {
+    fun getCategories() = viewModelScope.launch(Dispatchers.IO) {
         category_MLD.postValue(Resource.Loading())
-        val response = authRepository.getCategories()
-        category_MLD.postValue(handelCategoriesState(response))
+        val response = mainRepository.getCategories()
+        category_MLD.postValue(handleCategoriesState(response))
     }
 
-    private fun handelCategoriesState(response: Response<CategoriesResponse>): Resource<CategoriesResponse> {
+    private fun handleCategoriesState(response: Response<CategoriesResponse>): Resource<CategoriesResponse> {
         if (response.isSuccessful) {
             response.body().let { resultResponse ->
-                Log.e("handelCategoriesState", resultResponse.toString())
+                Log.e("handleCategoriesState", resultResponse.toString())
                 return Resource.Success(resultResponse)
             }
         }
         return Resource.Error(response.message())
     }
 
-    fun getCategoryDetails(category_id: Int) = viewModelScope.launch {
+    fun getCategoryDetails(category_id: Int) = viewModelScope.launch(Dispatchers.IO) {
         categoryDetails_MLD.postValue(Resource.Loading())
-        val response = authRepository.getCategoryDetails(category_id)
+        val response = mainRepository.getCategoryDetails(category_id)
         categoryDetails_MLD.postValue(handleCategoryDetailsState(response))
     }
 
@@ -119,27 +120,26 @@ class MainViewModel(
     }
 
 
-
-    private fun handelGetProfileData(response: Response<ProfileResponse>): Resource<ProfileResponse> {
+    private fun handleGetProfileData(response: Response<ProfileResponse>): Resource<ProfileResponse> {
         if (response.isSuccessful) {
             response.body().let { resultResponse ->
-                Log.e("handelGetProfileData", resultResponse.toString())
+                Log.e("handleGetProfileData", resultResponse.toString())
                 return Resource.Success(resultResponse)
             }
         }
         return Resource.Error(response.message())
     }
 
-    fun getHomeData(token: String) = viewModelScope.launch {
+    fun getHomeData(token: String) = viewModelScope.launch(Dispatchers.IO) {
         homeData_MLD.postValue(Resource.Loading())
-        val response = authRepository.getHomeData(token)
-        homeData_MLD.postValue(handelHomeData(response))
+        val response = mainRepository.getHomeData(token)
+        homeData_MLD.postValue(handleHomeData(response))
     }
 
-    private fun handelHomeData(response: Response<HomeDataResponse>): Resource<HomeDataResponse> {
+    private fun handleHomeData(response: Response<HomeDataResponse>): Resource<HomeDataResponse> {
         if (response.isSuccessful) {
             response.body().let { resultResponse ->
-                Log.e("handelHomeData", resultResponse.toString())
+                Log.e("handleHomeData", resultResponse.toString())
                 return Resource.Success(resultResponse)
             }
         }
