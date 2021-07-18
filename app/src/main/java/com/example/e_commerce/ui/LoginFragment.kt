@@ -69,6 +69,7 @@ class LoginFragment : Fragment() {
                             getStringValue(TOKEN),
                             Toast.LENGTH_LONG
                         ).show()
+                        saveLogin(Constants.IS_LOGIN)
                         navController.navigate(R.id.action_loginFragment_to_homeFragment)
 //                        navController.navigate(R.id.action_loginFragment_to_profileFragment)
 
@@ -124,9 +125,13 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (!getStringValue(Constants.TOKEN).equals("null")){
+//        if (!getStringValue(Constants.TOKEN).equals("null")){
+//            navController.navigate(R.id.action_loginFragment_to_homeFragment)
+//        }
+        if (isLogin(Constants.IS_LOGIN) == true){
             navController.navigate(R.id.action_loginFragment_to_homeFragment)
         }
+
     }
 
 
@@ -141,6 +146,10 @@ class LoginFragment : Fragment() {
 
     private fun isLogin(key: String) : Boolean?{
         return sharedPreferences.getBoolean(key , false)
+    }
+
+    private fun saveLogin(key: String){
+        editor.putBoolean(key , true)
     }
 
     private fun getStringValue(key: String): String? {
