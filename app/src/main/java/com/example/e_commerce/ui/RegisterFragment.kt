@@ -1,7 +1,6 @@
 package com.example.e_commerce.ui
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,40 +8,40 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
+import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentRegisterBinding
 import com.example.e_commerce.models.auth.register.RegisterRequest
 import com.example.e_commerce.util.Resource
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 class RegisterFragment : Fragment() {
 
-    private val TAG: String = "hii"
+    private val TAG: String = "RegisterFragment"
 
     private val GALLERY_REQUEST_CODE = 1024
 
     private lateinit var userImage: String
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var navController: NavController
-    lateinit var viewModel: AuthViewModel
+    lateinit var viewModel: MainViewModel
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRegisterBinding.inflate(inflater)
-        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         return binding.root
     }
 
@@ -53,43 +52,56 @@ class RegisterFragment : Fragment() {
         viewModel.register_MLD.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
-                    Log.e("test", response.massage.toString())
-                    Log.e("test", "Success${response.data!!.message.toString()}")
-                    Log.e("test", response.data!!.status.toString())
+                    Log.i(TAG, response.massage.toString())
+                    Log.i(TAG, "Success${response.data!!.message.toString()}")
+                    Log.i(TAG, response.data!!.status.toString())
                     Toast.makeText(
                             requireActivity(),
                             "Resource.Success : ${response.massage.toString()}",
                             Toast.LENGTH_LONG
                     ).show()
+
+                    navController.navigate(R.id.action_registerFragment_to_loginFragment)
                 }
                 is Resource.Error -> {
                     response.massage?.let {
-                        Log.e("test", "Resource.Error : ${response.massage.toString()}")
-                        Log.e("test", "Resource.Error : ${response.data!!.message.toString()}")
-                        Log.e("test", "Resource.Error : ${response.data!!.status.toString()}")
+                        Log.i(TAG, "Resource.Error : ${response.massage.toString()}")
+                        Log.i(TAG, "Resource.Error : ${response.data!!.message.toString()}")
+                        Log.i(TAG, "Resource.Error : ${response.data!!.status.toString()}")
                         Toast.makeText(activity, "Resource.Error : ${it}", Toast.LENGTH_LONG).show()
                     }
                 }
                 is Resource.Loading -> {
-                    Toast.makeText(activity, response.massage.toString(), Toast.LENGTH_LONG).show()
-                    Toast.makeText(activity, response.data?.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Resource.Loading ${response.massage.toString()}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Resource.Loading ${response.data?.message}", Toast.LENGTH_LONG).show()
+                    binding.progressBarRegister.visibility = View.VISIBLE
                 }
             }
         })
 
         binding.ivUserImage.setOnClickListener {
             pickFromGallery()
-            Log.e(TAG, " pickFromGallery")
+            Log.i(TAG, " pickFromGallery")
         }
 
         binding.btnRegister.setOnClickListener() {
-            viewModel.register(RegisterRequest(
+
+            try {
+                if (userImage.isEmpty()){
+                    Toast.makeText(requireContext(), "pales add photo", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                viewModel.register(RegisterRequest(
                     binding.tvName.text.toString(),
                     binding.tvPhone.text.toString(),
                     binding.tvEmail.text.toString(),
                     binding.tvPassword.text.toString(),
                     userImage
-            ))
+                ))
+            }catch (e : Exception){
+                Toast.makeText(requireContext(), e.localizedMessage, Toast.LENGTH_LONG).show()
+            }
+
         }
 
     }
@@ -103,23 +115,23 @@ class RegisterFragment : Fragment() {
                         launchImageCrop(uri)
                         binding.ivUserImage.setImageURI(uri)
                         userImage = encoder2(uri)
-                        Log.e(TAG, "GALLERY_REQUEST_CODE")
-                        Log.e(TAG, encoder2(uri))
+                        Log.i(TAG, "GALLERY_REQUEST_CODE")
+                        Log.i(TAG, encoder2(uri))
                     }
                 } else {
-                    Log.e(TAG, "Image selection error: Couldn't select that image from memory.")
+                    Log.i(TAG, "Image selection error: Couldn't select that image from memory.")
                 }
             }
 
             CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                 val result = CropImage.getActivityResult(data)
-                Log.e(TAG, "CROP_IMAGE_ACTIVITY_REQUEST_CODE")
+                Log.i(TAG, "CROP_IMAGE_ACTIVITY_REQUEST_CODE")
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.e(TAG, "Crop done:}")
+                    Log.i(TAG, "Crop done:}")
                     Toast.makeText(requireActivity(), "done", Toast.LENGTH_LONG).show()
                     setImage(result.uri)
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Log.e(TAG, "Crop error: ${result.error}")
+                    Log.i(TAG, "Crop error: ${result.error}")
                     Toast.makeText(requireContext(), "${result.error}", Toast.LENGTH_LONG).show()
                 }
             }

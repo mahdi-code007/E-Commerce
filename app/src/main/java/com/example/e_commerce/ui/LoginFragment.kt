@@ -16,6 +16,7 @@ import androidx.navigation.Navigation
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentLoginBinding
 import com.example.e_commerce.models.auth.login.LoginRequest
+import com.example.e_commerce.util.Constants
 import com.example.e_commerce.util.Constants.Companion.EMPTY
 import com.example.e_commerce.util.Constants.Companion.SHARED_PREFERENCES_NAME
 import com.example.e_commerce.util.Constants.Companion.TOKEN
@@ -27,16 +28,16 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var navController: NavController
-    lateinit var viewModel: AuthViewModel
+    lateinit var viewModel: MainViewModel
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater)
-        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         return binding.root
     }
@@ -46,7 +47,8 @@ class LoginFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
-        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        sharedPreferences =
+            requireContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
 
@@ -63,19 +65,19 @@ class LoginFragment : Fragment() {
                         response.data.data.token.let { setUserToken(it) }
 
                         Toast.makeText(
-                                requireActivity(),
-                                getStringValue(TOKEN),
-                                Toast.LENGTH_LONG
+                            requireActivity(),
+                            getStringValue(TOKEN),
+                            Toast.LENGTH_LONG
                         ).show()
                         navController.navigate(R.id.action_loginFragment_to_homeFragment)
 //                        navController.navigate(R.id.action_loginFragment_to_profileFragment)
 
-                    }catch (e : Exception){
+                    } catch (e: Exception) {
                         Log.e("Exception", e.message.toString())
                         Toast.makeText(
-                                requireActivity(),
-                                "Exception ${e.message.toString()}",
-                                Toast.LENGTH_LONG
+                            requireActivity(),
+                            "Exception ${e.message.toString()}",
+                            Toast.LENGTH_LONG
                         ).show()
                     }
 
@@ -92,6 +94,7 @@ class LoginFragment : Fragment() {
                 is Resource.Loading -> {
                     Toast.makeText(activity, response.massage.toString(), Toast.LENGTH_LONG).show()
                     Toast.makeText(activity, response.data?.message, Toast.LENGTH_LONG).show()
+                    binding.progressBarLogin.visibility = View.VISIBLE
                 }
 
             }
@@ -99,9 +102,18 @@ class LoginFragment : Fragment() {
 
         binding.btnLogin.setOnClickListener() {
 
-            var email = binding.tvEmail.text.toString()
-            var password = binding.tvPassword.text.toString()
-
+            var email = binding.loginEmailEt.text.toString()
+            var password = binding.loginPasswordIlEt.text.toString()
+            if (email.isEmpty()) {
+                binding.loginEmailEt.error = "Pales enter your email"
+                binding.loginEmailEt.requestFocus()
+                return@setOnClickListener
+            }
+            if (password.isEmpty()) {
+                binding.loginPasswordIlEt.error = "Pales enter your password"
+                binding.loginPasswordIlEt.requestFocus()
+                return@setOnClickListener
+            }
             loginRequest(LoginRequest(email, password))
         }
 
@@ -109,6 +121,14 @@ class LoginFragment : Fragment() {
             navController.navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        if (!getStringValue(Constants.TOKEN).equals("null")){
+            navController.navigate(R.id.action_loginFragment_to_homeFragment)
+        }
+    }
+
 
     private fun loginRequest(loginRequest: LoginRequest) {
         viewModel.login(loginRequest)
@@ -119,7 +139,11 @@ class LoginFragment : Fragment() {
         editor.apply()
     }
 
-    fun getStringValue(key: String): String? {
+    private fun isLogin(key: String) : Boolean?{
+        return sharedPreferences.getBoolean(key , false)
+    }
+
+    private fun getStringValue(key: String): String? {
         return sharedPreferences.getString(key, EMPTY)
     }
 

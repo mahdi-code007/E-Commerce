@@ -23,7 +23,13 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.e_commerce.ui.RegisterFragment"
-        android:label="RegisterFragment" />
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.e_commerce.ui.ProfileFragment"
@@ -32,4 +38,30 @@
         android:id="@+id/homeFragment"
         android:name="com.example.e_commerce.ui.HomeFragment"
         android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.e_commerce.ui.CategoriesFragment"
+        android:label="CategoriesFragment" >
+        <action
+            android:id="@+id/action_categoriesFragment_to_categoryDetailsFragment"
+            app:destination="@id/categoryDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.e_commerce.ui.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.e_commerce.ui.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/categoryDetailsFragment"
+        android:name="com.example.e_commerce.ui.CategoryDetailsFragment"
+        android:label="CategoryDetailsFragment" >
+        <argument
+            android:name="category_id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

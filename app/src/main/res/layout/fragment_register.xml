@@ -17,11 +17,14 @@
             android:layout_height="match_parent"
             tools:context=".ui.RegisterFragment">
 
+
+
             <ImageView
                 android:id="@+id/iv_userImage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="30dp"
+                android:src="@drawable/ic_add_a_photo"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +34,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tf_name"
                 android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
@@ -52,6 +56,7 @@
                 android:id="@+id/tf_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
@@ -71,6 +76,7 @@
                 android:id="@+id/tf_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
@@ -90,6 +96,7 @@
                 android:id="@+id/tf_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
@@ -120,6 +127,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tf_password" />
+
+            <ProgressBar
+                android:id="@+id/progressBar_register"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

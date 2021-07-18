@@ -23,14 +23,14 @@ class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var navController: NavController
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var viewModel: MainViewModel
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(inflater)
 //        sharedPreference.getString("token","null")
-        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         return binding.root
     }
 
