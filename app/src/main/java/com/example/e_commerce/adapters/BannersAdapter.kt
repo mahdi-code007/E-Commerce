@@ -5,15 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.e_commerce.databinding.ItemBannersBinding
-import com.example.e_commerce.models.home.homeData.Banner
+import com.example.e_commerce.models.home.Banner
 
 
-class BannersAdapter(onBannerClick: OnItemClickListener) :
+class BannersAdapter(_onBannerClick: OnItemClickListener) :
     RecyclerView.Adapter<BannersAdapter.BannersViewHolder>() {
 
-    var _onBannerClick = onBannerClick
+    var onBannerClick = _onBannerClick
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannersViewHolder {
 
         return BannersViewHolder(
@@ -26,9 +25,7 @@ class BannersAdapter(onBannerClick: OnItemClickListener) :
 
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount() = differ.currentList.size
 
     override fun onBindViewHolder(holder: BannersViewHolder, position: Int) {
         val banner = differ.currentList[position]
@@ -38,10 +35,11 @@ class BannersAdapter(onBannerClick: OnItemClickListener) :
     inner class BannersViewHolder(private val binding: ItemBannersBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(banner: Banner) {
-            Glide.with(binding.root).load(banner.image).into(binding.ivBanner)
+            binding.banner = banner
+            binding.executePendingBindings()
 
             binding.ivBanner.setOnClickListener() {
-                _onBannerClick.onBannerClick(banner)
+                onBannerClick.onBannerClick(adapterPosition)
             }
         }
     }
@@ -62,7 +60,7 @@ class BannersAdapter(onBannerClick: OnItemClickListener) :
     val differ = AsyncListDiffer(this, differCallback)
 
     interface OnItemClickListener {
-        fun onBannerClick(banner: Banner)
+        fun onBannerClick(position: Int)
     }
 
 }

@@ -1,18 +1,20 @@
 package com.example.e_commerce.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.e_commerce.R
 import com.example.e_commerce.databinding.ItemProductsBinding
-import com.example.e_commerce.models.home.homeData.Product
+import com.example.e_commerce.models.ProductOld
 
 
-class ProductsAdapter(onProductClick: OnItemClickListener) :
+class ProductsAdapter(_onProductClick: OnItemClickListener) :
     RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder>() {
 
-    var _onProductClick = onProductClick
+    var onProductClick = _onProductClick
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsViewHolder {
 
 
@@ -26,35 +28,49 @@ class ProductsAdapter(onProductClick: OnItemClickListener) :
 
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount() = differ.currentList.size
+
 
     override fun onBindViewHolder(holder: ProductsViewHolder, position: Int) {
         val products = differ.currentList[position]
+        if (products.inFavorites){
+            Log.i("ProductsAdapter", "onBindViewHolder: ${products.name}")
+            holder.binding.homeFavoriteBtn.setImageResource(R.drawable.in_favorite)
+
+        }
+        else{
+            holder.binding.homeFavoriteBtn.setImageResource(R.drawable.ic_favorite_border)
+        }
         holder.bind(products)
+
+
     }
 
-    inner class ProductsViewHolder(private val binding: ItemProductsBinding) :
+
+
+    inner class ProductsViewHolder(val binding: ItemProductsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(products: Product) {
+        fun bind(products: ProductOld) {
             binding.products = products
             binding.executePendingBindings()
-//            Glide.with(binding.root).load(products.image).into(binding.productImageIv)
-//            binding.productNameIv.text = products.name
 
-            binding.root.setOnClickListener() {
-                _onProductClick.onProductClick(products)
+            binding.homeProductsCv.setOnClickListener() {
+                onProductClick.onProductClick(adapterPosition)
             }
+            binding.homeFavoriteBtn.setOnClickListener(){
+                onProductClick.onAddToFavoritesClick(products.id)
+            }
+            val state = differ.currentList[adapterPosition].inFavorites
+            Log.i("onBindViewHolder", "onBindViewHolder: ${state.toString()}")
         }
     }
 
-    private val differCallback = object : DiffUtil.ItemCallback<Product>() {
-        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+    private val differCallback = object : DiffUtil.ItemCallback<ProductOld>() {
+        override fun areItemsTheSame(oldItem: ProductOld, newItem: ProductOld): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+        override fun areContentsTheSame(oldItem: ProductOld, newItem: ProductOld): Boolean {
             return oldItem == newItem
         }
 
@@ -63,7 +79,8 @@ class ProductsAdapter(onProductClick: OnItemClickListener) :
     val differ = AsyncListDiffer(this, differCallback)
 
     interface OnItemClickListener {
-        fun onProductClick(product: Product)
+        fun onProductClick(position: Int)
+        fun onAddToFavoritesClick(productsId: Int)
     }
 
 }

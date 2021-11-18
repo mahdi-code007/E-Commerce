@@ -8,17 +8,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class RetrofitInstance {
+
     companion object {
-        private val retrofit by lazy {
+
+        val retrofit by lazy {
 
             val logging = HttpLoggingInterceptor()
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(logging)
-                    .connectTimeout(45 , TimeUnit.SECONDS)
-                    .readTimeout(45 , TimeUnit.SECONDS)
-                    .writeTimeout(45 , TimeUnit.SECONDS)
+                .connectTimeout(45, TimeUnit.SECONDS)
+                .readTimeout(45, TimeUnit.SECONDS)
+                .writeTimeout(45, TimeUnit.SECONDS)
                 .build()
 
             Retrofit.Builder()
@@ -28,9 +30,6 @@ class RetrofitInstance {
                 .build()
         }
 
-
-        val api by lazy {
-            retrofit.create(ApiService::class.java)
-        }
     }
+
 }

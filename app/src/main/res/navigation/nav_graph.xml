@@ -9,7 +9,7 @@
         android:id="@+id/loginFragment"
         android:name="com.example.e_commerce.ui.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.e_commerce.ui.RegisterFragment"
-        android:label="RegisterFragment" >
+        android:label="RegisterFragment">
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment"
@@ -36,32 +36,49 @@
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.e_commerce.ui.HomeFragment"
-        android:label="HomeFragment" />
+        android:name="com.example.e_commerce.ui.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_categoryDetailsFragment"
+            app:destination="@id/categoryDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.example.e_commerce.ui.CategoriesFragment"
-        android:label="CategoriesFragment" >
+        android:name="com.example.e_commerce.ui.categories.CategoriesFragment"
+        android:label="CategoriesFragment">
         <action
             android:id="@+id/action_categoriesFragment_to_categoryDetailsFragment"
             app:destination="@id/categoryDetailsFragment" />
+        <argument
+            android:name="catecoriesList"
+            app:argType="com.example.e_commerce.models.home.Categories" />
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.e_commerce.ui.FavoriteFragment"
+        android:name="com.example.e_commerce.ui.favorites.FavoritesFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.e_commerce.ui.CartFragment"
+        android:name="com.example.e_commerce.ui.cart.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/categoryDetailsFragment"
-        android:name="com.example.e_commerce.ui.CategoryDetailsFragment"
-        android:label="CategoryDetailsFragment" >
+        android:name="com.example.e_commerce.ui.categories.CategoryDetailsFragment"
+        android:label="CategoryDetailsFragment">
         <argument
-            android:name="category_id"
+            android:name="categoryId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.e_commerce.ui.search.SearchFragment"
+        android:label="SearchFragment" />
 </navigation>

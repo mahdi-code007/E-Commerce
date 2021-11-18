@@ -6,7 +6,7 @@
 
         <variable
             name="categories"
-            type="com.example.e_commerce.models.categories.SubData" />
+            type="com.example.e_commerce.models.categories.CategoriesSubData" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -16,8 +16,8 @@
         android:layout_margin="@dimen/_5sdp"
         android:animateLayoutChanges="true"
         app:shapeAppearance="@style/ShapeAppearance_custom_categories_corners"
-        android:elevation="@dimen/_8sdp"
-        app:cardElevation="@dimen/_10sdp">
+        android:elevation="@dimen/_15sdp"
+        app:cardElevation="@dimen/_20sdp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

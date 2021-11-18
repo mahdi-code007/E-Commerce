@@ -1,4 +1,4 @@
-package com.example.e_commerce.ui
+package com.example.e_commerce.ui.cart
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.e_commerce.R
 
-class FavoriteFragment : Fragment() {
+
+class CartFragment : Fragment() {
 
 
     override fun onCreateView(
@@ -15,8 +16,7 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        return inflater.inflate(R.layout.fragment_cart, container, false)
     }
-
 
 }

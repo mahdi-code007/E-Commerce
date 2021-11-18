@@ -1,4 +1,4 @@
-package com.example.e_commerce.ui
+package com.example.e_commerce.ui.categories
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -23,10 +23,10 @@ import com.example.e_commerce.util.Resource
 
 class CategoriesFragment : Fragment(), CategoriesAdapter.OnItemClickListener {
 
-    private final val TAG = "CategoriesTag"
+    private val TAG = "CategoriesTag"
     private lateinit var binding: FragmentCategoriesBinding
     private lateinit var navController: NavController
-    private lateinit var viewModel: MainViewModel
+    private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var categoriesAdapter: CategoriesAdapter
@@ -36,10 +36,11 @@ class CategoriesFragment : Fragment(), CategoriesAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
+        initSharedPreference()
         binding = FragmentCategoriesBinding.inflate(inflater)
         setUpRecyclerView()
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.getCategories()
+        categoriesViewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
+        categoriesViewModel.getCategories()
         return binding.root
     }
 
@@ -48,23 +49,13 @@ class CategoriesFragment : Fragment(), CategoriesAdapter.OnItemClickListener {
 
         navController = Navigation.findNavController(view)
 
-        sharedPreferences = requireContext().getSharedPreferences(
-            Constants.SHARED_PREFERENCES_NAME,
-            Context.MODE_PRIVATE
-        )
-        editor = sharedPreferences.edit()
 
-        viewModel.category_MLD.observe(viewLifecycleOwner, Observer { response ->
+
+        categoriesViewModel.categories.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
                     try {
-                        Toast.makeText(
-                            requireActivity(),
-                            response.data?.data?.data?.size.toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
-
-                        categoriesAdapter.differ.submitList(response.data?.data?.data)
+                        categoriesAdapter.differ.submitList(response.data?.categoriesData?.categoriesSubData)
                     } catch (e: Exception) {
 
                     }
@@ -99,10 +90,17 @@ class CategoriesFragment : Fragment(), CategoriesAdapter.OnItemClickListener {
         }
     }
 
+    private fun initSharedPreference() {
+        sharedPreferences = requireActivity().getSharedPreferences(
+            Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
+        )
+        editor = sharedPreferences.edit()
+    }
+
     override fun onCategoryClick(position: Int) {
         var id = categoriesAdapter.differ.currentList.get(position).id
         Log.i(TAG, "onCategoryClick: $id")
-        Toast.makeText(requireActivity(), id.toString(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireActivity(), id.toString(), Toast.LENGTH_LONG).show()
         val action =
             CategoriesFragmentDirections.actionCategoriesFragmentToCategoryDetailsFragment(id)
         navController.navigate(action)
